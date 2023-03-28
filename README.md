@@ -58,7 +58,7 @@ The final results in the reimplementation different slightly from the results in
 
 | Reimpl? | Model Size | Finetune (Model) | Prompt Tune | Delta |
 | ------- | -------- | --------- | ------- | -------- |
-| Yes     | Base     |  90.6   |   86.0  | -3.6 |
+| Yes     | Base     |  90.6   |   86.0  | -4.6 |
 | No      | XXL      |  94.9   |   94.8  | -0.1 |
 
 
