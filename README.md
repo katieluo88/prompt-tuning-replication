@@ -40,7 +40,7 @@ One key to the performance of the soft prompt tuning was the learning rate and o
 | AF Learning Rate | F1 | Exact Match |
 | --------- | ------- | -------- |
 | 1e-3      |  67.6   |   58.0   |
-| 0.3       |  85.8   |   78.3   |
+| 0.3       |  86.0   |   78.6   |
 
 
 The reimplementation also supports the use of the AdamW optimizer (`optimizer "adam"`) as used by other reimplementations (e.g., PEFT from Hugging Face). However, experimental results show that using the AdaFactor optimizer gives a boost in performance. Results are reported with learning rate of 1e-3 for comparison:
@@ -58,7 +58,7 @@ The final results in the reimplementation different slightly from the results in
 
 | Reimpl? | Model Size | Finetune (Model) | Prompt Tune | Delta |
 | ------- | -------- | --------- | ------- | -------- |
-| Yes     | Base     |  90.6   |   85.8  | -4.8 |
+| Yes     | Base     |  90.6   |   86.0  | -4.6 |
 | No      | XXL      |  94.9   |   94.8  | -0.1 |
 
 
