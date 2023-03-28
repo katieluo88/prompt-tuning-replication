@@ -1,0 +1,12 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Experimental stuff
+default/
+
+# Jupyter Notebook
+.ipynb_checkpoints
+*.ipynb
+
