@@ -1,7 +1,7 @@
 # The Power of Scale for Parameter-Efficient Prompt Tuning
 
 
-Implementation of soft embeddings from https://arxiv.org/abs/2104.08691v1 using Pytorch and Huggingface transformers.
+Re-implementation of prompt tuning for QA, from https://arxiv.org/abs/2104.08691v1 using Pytorch and Huggingface transformers.
 
 ## Citation
 
@@ -20,7 +20,7 @@ Implementation of soft embeddings from https://arxiv.org/abs/2104.08691v1 using 
 
 All models were trained on the base size for the T5 model, loaded from Hugging Face. The work appears to have use the XXL size model, but due to memory/compute constraints, all reproductions were done on the base sizes (~250 million parameters). Experiments were done on the SQuAD dataset, loaded from Hugging Face.
 
-This work attempted to reproduce the results from Table 1 of the paper, row 1 (Prompt).
+This work attempted to faithfully reproduce the results from Table 1 of the paper, row 1 (Prompt).
 
 ### Soft Prompt Tuning Replication
 Run the training for prompt-tuning with the following command:
@@ -88,6 +88,6 @@ These results were on-par with the results reported in the original T5 paper (~8
 
 ## Concluding Remarks
 
-From this work, one observation is that under the base model size, I was not able to get the prompt-tuning to match the performance of fine-tuning the entire model. This was also noted by the authors of the paper, since they mention that on the XXL model size the performance was matched. This can be assumed to mean that this was *only* true on the XXL size; however, this cannot be confirmed as the results for the base size were not reported.
+From this work, one observation is that under the base model size, I was not able to get the prompt-tuning to match the performance of fine-tuning the entire model. The authors did note that the at the XXL size, prompt tuning matches even the stronger multi-task model tuning baseline (section 3.1). One possibility is that there is a performance gap across some or all of the other model sizes; however, this cannot be confirmed as the results for the base size were not reported.
 
 In addition, online implementations including the [official implementation](https://github.com/google-research/prompt-tuning) could not be directly used since it was in JAX, and was mostly used to confirm the hyperparameters used in the final replication. Instead, the project started with utilizing the soft-embedding implementation from [@kipgparker](https://github.com/kipgparker/soft-prompt-tuning). Other QA finetuning [online implementations](https://github.com/zwcolin/Domain-Robustness-Prompt-Tuning) resulted in far lower performance, maybe attributing to the different pre-training, parameters, and optimizer. [PEFT Hugging Face](https://github.com/huggingface/peft) implementation was referenced, but the examples were not on conditional generation (which was required for the task of QA), and utilized a different optimizer than what was reported in the paper, AdamW, which in this experiment showed results in a drop in performance, as well as a significant gap from the final performance. 
