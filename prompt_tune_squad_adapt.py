@@ -54,6 +54,10 @@ def parse_args():
         default=1e-3, required=False, help="batch size for training",
     )
     parser.add_argument(
+        "--grad_accum_steps", type=int,
+        default=1, required=False, help="gradient accum steps",
+    )
+    parser.add_argument(
         "--weight_decay", type=float,
         default=0, required=False, help="batch size for training",
     )
@@ -89,13 +93,17 @@ def main():
         # LM-Adapt model
         if rank == 0:
             print("Loading LM-Adapt model")
-        tokenizer = T5Tokenizer.from_pretrained("google/t5-base-lm-adapt")
-        model = T5ForConditionalGeneration.from_pretrained("google/t5-base-lm-adapt")
+        # tokenizer = T5Tokenizer.from_pretrained("google/t5-base-lm-adapt")
+        # model = T5ForConditionalGeneration.from_pretrained("google/t5-base-lm-adapt")
+        tokenizer = T5Tokenizer.from_pretrained("google/t5-large-lm-adapt")
+        model = T5ForConditionalGeneration.from_pretrained("google/t5-large-lm-adapt")
     else:
         if rank == 0:
             print("Loading T5-v1_1-base model")
-        tokenizer = T5Tokenizer.from_pretrained("google/t5-v1_1-base")
-        model = T5ForConditionalGeneration.from_pretrained("google/t5-v1_1-base")
+        # tokenizer = T5Tokenizer.from_pretrained("google/t5-v1_1-base")
+        # model = T5ForConditionalGeneration.from_pretrained("google/t5-v1_1-base")
+        tokenizer = T5Tokenizer.from_pretrained("google/t5-v1_1-large")
+        model = T5ForConditionalGeneration.from_pretrained("google/t5-v1_1-large")
 
     metric = evaluate.load("squad")
 
@@ -185,7 +193,7 @@ def main():
     model_best_f1 = 0.
 
     for epoch in range(num_epochs):
-        train_loss = train_one_epoch(model, optimizer, train_dataloader, lr_scheduler, device=device_id, rank=rank)        
+        train_loss = train_one_epoch(model, optimizer, train_dataloader, lr_scheduler, device=device_id, rank=rank, grad_accum_steps=args.grad_accum_steps)        
         squad_output_metrics = eval_one_epoch(model, test_dataloader, theoretical_answers, tokenizer, metric, device=device_id, rank=rank)
         if rank == 0:
             print("--------------------------------------------------")

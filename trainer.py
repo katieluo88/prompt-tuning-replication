@@ -3,7 +3,7 @@ import torch
 from tqdm import tqdm
 
 
-def train_one_epoch(model, optimizer, train_dataloader, lr_scheduler, device, rank=0):
+def train_one_epoch(model, optimizer, train_dataloader, lr_scheduler, device, rank=0, grad_accum_steps=1):
     model.train()
 
     if rank == 0:
@@ -12,14 +12,16 @@ def train_one_epoch(model, optimizer, train_dataloader, lr_scheduler, device, ra
     
     epoch_loss = 0
     # import ipdb; ipdb.set_trace()
-    for batch in train_dataloader:
+    for idx, batch in enumerate(train_dataloader):
         batch = {k: v.to(device) for k, v in batch.items()}
         outputs = model(**batch)
         loss = outputs.loss
+        loss = loss / grad_accum_steps
         loss.backward()
-        optimizer.step()
-        lr_scheduler.step()
-        optimizer.zero_grad()
+        if (idx + 1) % grad_accum_steps == 0 or (idx + 1) == len(train_dataloader):
+            optimizer.step()
+            lr_scheduler.step()
+            optimizer.zero_grad()
         epoch_loss += loss.item()
         if rank == 0:
             pbar.update()

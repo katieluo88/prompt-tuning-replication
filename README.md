@@ -52,14 +52,26 @@ The reimplementation also supports the use of the AdamW optimizer (`optimizer "a
 
 Experimental challenges included replacing the <pad> tokens in the label with the "ignore" token value of -100, which was common practice but not mentioned explicitly in the paper. In addition, the require batch size of 32 did not fit on even the largest machines, and required either gradient accumulation or distributed training. This work utilizes distributed training across 4 machines, similar to what was described in the paper, using `torch.distributed.run`.
 
-### Final Results
+### Final Results (Updated)
 
 The final results in the reimplementation different slightly from the results in Table 1, most likely due to the difference in model size (base vs. XXL). Final F1 results are below:
 
 | Reimpl? | Model Size | Finetune (Model) | Prompt Tune | Delta |
 | ------- | -------- | --------- | ------- | -------- |
 | Yes     | Base     |  90.6   |   86.0  | -4.6 |
+| Yes     | Large    |  91.3   |   91.9  | +0.6 |
 | No      | XXL      |  94.9   |   94.8  | -0.1 |
+
+*Update*: added the results from prompt-tuning T5 large model. Results for finetune model were taken from the T5 paper, Table 4.
+
+### Updated Final Results (T5 Large)
+
+After re-running the prompt-tuning on T5 Large model, we obtain the following results, which more closely match the results from the paper. It appears that the larger model sizes does indeed close the gap between fine-tuning the whole model vs. prompt-tuning.
+
+| Model Size | F1 | Exact Match |
+| ----------- | ----------- | ----------- |
+| Base      |  90.6   |   83.5   |
+| Large     |  91.9   |   85.4   |
 
 
 ### A Note About the Baseline (Fine-tuning)
